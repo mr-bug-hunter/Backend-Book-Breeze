@@ -497,6 +497,3 @@ const PORT = 2000
 app.listen(PORT, ()=>{
     console.log(`Server is running on ${PORT}`)
 })
-
-console.log("MongoDB exists:", !!process.env.MONGODB)
-console.log("MongoDB value:" , process.env.MONGODB ? "loading" : "MISSING")
