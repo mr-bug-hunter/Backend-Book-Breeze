@@ -1,3 +1,6 @@
+const dns = require("dns")
+dns.setServers(["1.1.1.1", "1.0.0.1"])
+
 const mongoose = require("mongoose")
 require("dotenv").config()
 
@@ -8,7 +11,8 @@ const initialize = async ()=>{
     .connect(mongoUri)
     .then(()=>{
         console.log("Database Connected to Successfully.")
-    }).catch((error)=>console.log({error: "Error in connecting to Database"}))
+    }).catch((error)=>
+        console.log({error: "Error in connecting to Database", error}))
 }
 
 module.exports = {initialize}
