@@ -96,6 +96,28 @@ app.get("/books/cart", async (req, res)=>{
     }
 })
 
+//Get All Categories
+//fetch all categories for dislaying category cards
+
+async function allCategories(){
+    try{
+        const categories = await CategoryBook.find()
+        return categories
+    }catch(error){
+        throw error
+    }
+}
+
+app.get("/books/categories", async (req, res)=>{
+    try{
+        const categories = await allCategories()
+        res.json({message: "All categories books ", categories: categories})
+    }catch(error){
+        res.status(500).json({error: "Failed to fetch categories."})
+    }
+})
+
+
 
 
 //Add categories
@@ -119,27 +141,6 @@ app.post("/books/categories", async (req, res)=>{
     }
 })
 
-//Get All Categories
-//fetch all categories for dislaying category cards
-
-async function allCategories(){
-    try{
-        const categories = await CategoryBook.find()
-        return categories
-    }catch(error){
-        throw error
-    }
-}
-
-app.get("/books/categories", async (req, res)=>{
-    try{
-        const categories = await allCategories()
-        res.json({message: "All categories books ", categories: categories})
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch categories."})
-    }
-})
-
 //Get Category By ID
 //fetch all books belonging to selected category
 
@@ -160,6 +161,8 @@ app.get("/books/category/:categoryName", async (req, res)=>{
         res.status(500).json({error: "Failed to fetch category"})
     }
 })
+
+
 
 
 //POST books cart
