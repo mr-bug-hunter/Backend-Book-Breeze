@@ -168,24 +168,25 @@ app.get("/books/category/:categoryName", async (req, res)=>{
 //POST books cart
 //add a book to the cart. this or check cart and Increase Quantity create cart Item
 
-async function addToCart(productId){
+async function addToCart(productId, quantity = 1){
     try{
         const exisitingProduct = await Cart.findOne({
         productId: productId })
     if(exisitingProduct){
         const book = await BookStore.findById(productId)
-        if(exisitingProduct.quantity >= book.stock){
+        const newQuantity = exisitingProduct.quantity + quantity
+        if(newQuantity > book.stock){
             return{
                 limitReached : true, cartItem: exisitingProduct
             }
         }
-        exisitingProduct.quantity +=1
+        exisitingProduct.quantity = newQuantity
 
         const updatedCart = await exisitingProduct.save()
         return updatedCart
     } else{
         const cartItem = new Cart({
-            productId: productId, quantity: 1
+            productId: productId, quantity: quantity
         })
         const savedCart = await cartItem.save()
         return savedCart
@@ -197,8 +198,8 @@ async function addToCart(productId){
 
 app.post("/books/cart", async (req, res)=>{
     try{
-        const {productId} = req.body
-        const cartItem = await addToCart(productId)
+        const {productId, quantity} = req.body
+        const cartItem = await addToCart(productId, quantity || 1)
         res.status(200).json({message: "Cart added successfully.", cartItem: cartItem})
     }catch(error){
         res.status(500).json({error: "Failed to add product cart"})
